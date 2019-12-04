@@ -65,4 +65,21 @@ Combine은 Reactive Streams이라고 불리는 Rx와 같으면서도 다르다. 
 ## Combine basics
 Combine을 움직이는 세 가지 키는 publisher, opertors, subsciber 이다.
 
-## Pulishers
+### Pulishers
+Publishers는 시간이 지나 하나 이상의 관심이 있는 무리(예를 들면 subscribers)에 값을 방출할 수 있는 타입들이다. 
+Publisher의 내부로직과 관계없이(수학 계산, 네트워킹, 이벤트핸들링을 포함함 꽤 큰 어떤 일도...) 모든 Publisher는 3가지 타입의 멀티 이벤트를 방출할 수 있다.
+
+1. publisher 의 일반적인 _Output_ 타입의 output 값
+2. 성공한 컴플리션
+3. 컴플리션과 함께 publisher의 _Failture_ 타입의 에러
+
+Publisher는 0개 이상의 output 값을 방출 할 수 있다. 그리고 만약 그것이 완료 되었다면(성공 혹은 실패 때문에) 어떠한 다른 이벤트도 발생하지 않을 것이다.
+Publisher의 베스트 기능 중 하나는 내장되어 있는 에러 핸들링이다. 
+Publisher 프로토콜은 일반적으로 2가지 타입이 있다.
+* Publisher.Output: output 삾의 타입. 만약에 Int 타입으로 지정한다면, 절대 String, Data 값으로 방출하지 않는다.
+* Publisher.Failure: 실패했을 때, publisher가 던질 수 있는 타입, 만약에 publisher가 절대 실패하지 안흔다며 Never라는 실패 타입을 사용해 명시해야한다.
+
+### Operators
+
+
+##
