@@ -97,5 +97,13 @@ Cancellable 프로토콜을 따르면 subscription 코드가 Cancellable 오브�
 이 프로세스를 자동화하고 싶다면, AnyCancellable 컬렉션 프로토콜을 가지면 된다. 프로퍼티가 메모리에서 해제될 때, 자동적으로 취소하고 해제된다.
 
 ## What's the benefit of Combine code over "standard" code?
+* Combine은 시스템 레벨과 통합되어있다. 이것은 Combine이 swift 언어의 기능을 사용해서 외부에서 이용할 수 없었던 API를 제공할 수 있다는 것은 의미한다. 
+* 올드 스타일(delegate, IBAction, closure)의 비동기 코드는 버튼, 제스처 등 그것을 다룰려면 커스텀 코드를 작성해야한다. 또한 테스트를 위해 많은 커스텀 코드를 작성해야한다. Combine의 operators들은 이미 잘 테스트 되어있다. 
+* Publisher의 컴포지션과 재사용성은 매우 강력하다.
+* Combine의 operators는 매우 조합하기 쉬워서 새로운 것이 필요하여 만들게 된다면, 새 오퍼레이터는 나머지 combine과 즉시 연결하여 사용하 수 있게 된다.
+* 비동기코드의 테스트는 보통 동기 코드르 테스트하는 것보다 매우 복잡하다. 그러나 이미 operators는 테스트 되어있고, 우리는 비지니스 로직만 테스트하면 된다. 
+
+## App architecture
+
 
 ##
