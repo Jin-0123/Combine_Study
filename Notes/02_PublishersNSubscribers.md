@@ -71,7 +71,7 @@ example(of: "Subscriber") {
   subscription.cancel()
 }
 ~~~
-_sink:_
+**_sink:_**
 > it simply provides an easy way to attach a subscriber with closures to handle output from a publisher
 * `sink` 메소드는 publisher로 부터 ouput을 다루기 위한 클로저를 가진 subsciber를 첨부하는 간단한 방법이다.
 이 예제에서는 클로저들을 무시하고 대신에 알림을 받았을 때, 메시지를 출력하도록 했다.
@@ -96,12 +96,34 @@ example(of: "Just") {
 }
 ~~~
 
-_Just:_
+**_Just:_**
 > A publisher that emits an output to each subscriber just once, and then finishes.
 * publisher로써 각 subscriber에 output을 방출하고 끝난다.
 * 다른 subsciber를 추가하면 새 subsciber에도 Just publisher의 output이 출력되고, 끝난다.
 
-### Subscribing with _assign(to:on:)
+### Subscribing with _assign(to: on:)_
+assign(to: on:) 객체의 KVO-compliant 프러퍼티에서 받은 값을 할당할 수 있도록 한다.
+~~~
+example(of: "assign(to:on:)") {
+  // 1. 클래스와 변수를 정의하고, didSet 옵저버에 값을 출력하도록한다.
+  class SomeObject {
+    var value: String = "" {
+      didSet {
+        print(value)
+      }
+    }
+  }
+  
+  // 2. 클래스의 인스턴스르 생성한다.
+  let object = SomeObject()
+  
+  // 3. 스트링 배열을 방출하는 publisher를 생성한다.
+  let publisher = ["Hello", "world!"].publisher
+  
+  // 4. publisher를 subscibe하고, 객체의 value에 각 값(Hello, world)을 할당한다.
+  _ = publisher
+    .assign(to: \.value, on: object)
+}
+~~~
 
-
-##
+## Hello Cancellable
