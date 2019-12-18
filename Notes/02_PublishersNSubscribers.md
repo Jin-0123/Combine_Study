@@ -44,9 +44,64 @@ center.post(name: myNotification, object: nil)
 // 6
 center.removeObserver(observer)
 ~~~
-  
- 예제를 빌드해보면, 콘솔에 output이 출력된다. 
- 이 예제에서는 output이 실제로 publisher에서부터 나온 것은 아니다. 그렇게하려면 subscriber가 필요하다.
+* 예제를 빌드해보면, 콘솔에 output이 출력된다. 
+* 이 예제에서는 output이 실제로 publisher에서부터 나온 것은 아니다. 그렇게하려면 subscriber가 필요하다.
  
- ##
- 예제를 빌드해보면, 콘솔에 output이 출력된다. 
+ ## Hello Subscriber
+* subscriber publisher로부터 input을 받을 수 있는 요구사항을 정의하는 프로토콜이다. 
+* publisher는 최소 한명의 subscriber가 있어야 이벤트를 방출한다.
+
+### Subscribing with _sink(_:_:)_
+~~~
+example(of: "Subscriber") {
+  let myNotification = Notification.Name("MyNotification")
+  let publisher = NotificationCenter.default.publisher(for: myNotification, object: nil)
+  let center = NotificationCenter.default
+  
+  // 1
+  let subscription = publisher
+    .sink { _ in
+      print("Notification received from a publisher!")
+    }
+    
+  // 2
+  center.post(name: myNotification, object: nil)
+  
+  // 3
+  subscription.cancel()
+}
+~~~
+_sink:_
+> it simply provides an easy way to attach a subscriber with closures to handle output from a publisher
+* `sink` 메소드는 publisher로 부터 ouput을 다루기 위한 클로저를 가진 subsciber를 첨부하는 간단한 방법이다.
+이 예제에서는 클로저들을 무시하고 대신에 알림을 받았을 때, 메시지를 출력하도록 했다.
+* `sink` 오퍼레이터는 publisher가 방출하는 많은 값들을 계속해서 받을 것이다. 이것은 _unlimited demand_ 로 알려져있고, 곧 더 자세히 배우게 될 것이다.
+* 이 예제에서는 sink 오퍼레이터 제공하는 두 가지 클로저를 사용하지는 않았지만, 그 클로저를 설명하자면 하나는 completion event를 받아 핸들링하는 것이고 다른 하나는 값을 받아 핸들링하는 것이다.
+
+
+~~~
+example(of: "Just") {
+  // 1. Just를 사용해서 publisher를 만든다. 이것은 초기값을 넣어서 publisher를 생성한다.
+  let just = Just("Hello world!")
+  
+  // 2. publisher에 subscription을 생성한다. 그리고 이벤트를 받았을 때 각 메시지를 출력한다.
+  _ = just
+    .sink(
+      receiveCompletion: {
+        print("Received completion", $0)
+      },
+      receiveValue: {
+        print("Received value", $0)
+    })
+}
+~~~
+
+_Just:_
+> A publisher that emits an output to each subscriber just once, and then finishes.
+* publisher로써 각 subscriber에 output을 방출하고 끝난다.
+* 다른 subsciber를 추가하면 새 subsciber에도 Just publisher의 output이 출력되고, 끝난다.
+
+### Subscribing with _assign(to:on:)
+
+
+##
