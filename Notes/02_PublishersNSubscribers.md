@@ -190,5 +190,5 @@ public protocol Subscription: Cancellable, CustomCombineIdentifierConvertible {
 ~~~
 
 ## Creating a custom subsciber
-
-##
+* Subscibers.Demand: .none / .unlimit / .max([num])
+* 미리 정의된 타입이 아닌 다른 value를 방출하면, error 발생
