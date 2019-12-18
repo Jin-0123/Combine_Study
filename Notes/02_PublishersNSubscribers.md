@@ -127,3 +127,68 @@ example(of: "assign(to:on:)") {
 ~~~
 
 ## Hello Cancellable
+* subscriber가 끝나 더 이상 publisher로 부터 값을 받고 싶지 않을 때, 리소스를 해제하고 네트워크 콜과 같은 작업을 멈추게 하기 위해 subscription을 취소한
+다.
+* Subsciptions는 AnyCabcellable 인스턴스(cancellation token)를 리턴한다. 이것은 cancellation token과 함께 끝났을 때, 구독을 취소하도록 한다. AnyCancellable은 Cancellable을 따르고 cancel() 메서드가 요구되어진다.
+* subscription에서 명시적으로 cancel()을 부르 않으면 publisher가 완료될 때까지 계속되어진다. 혹은 메모리 관리자에 의해 저장된 subsciption이 해제된다. 그때 구독이 취소될 것이다. 
+
+## Understanding what's going on
+1. subscriber는 publisher를 subscribe한다.
+2. publisher는 subsciption을 생성하고, 그것을 subscriber에게 준다.
+3. subsciber는 value를 요청한다.
+4. publisher는 value를 보낸다.
+5. publisher는 completion을 보낸다.
+
+~~~
+public protocol Publisher {
+  // 1. publisher가 만들어 낼 값의 타입
+  associatedtype Output
+
+  // 2. publish가 만들지도 모를 Error 타입, 만약에 publisher가 에러를 만들지 않는다고 보장한다면 Never.
+  associatedtype Failure : Error
+
+  // 4. subscribe(_:) 구현은 publisher에 subsciber를 붙이기 위해 receive(subsciber:)를 부른다. 즉, subscription을 생성.
+  func receive<S>(subscriber: S)
+    where S: Subscriber,
+    Self.Failure == S.Failure,
+    Self.Output == S.Input
+}
+
+extension Publisher {
+  // 3. subscriber는 publisher의 subscribe(_:)를 부른다.
+  public func subscribe<S>(_ subscriber: S)
+    where S : Subscriber,
+    Self.Failure == S.Failure,
+    Self.Output == S.Input
+}
+~~~
+
+~~~
+public protocol Subscriber: CustomCombineIdentifierConvertible {
+  // 1. subscriber가 받을 수 있는 value의 타입
+  associatedtype Input
+
+  // 2. subscriber가 받을 수 있는 에러의 종류, 혹은 만약ㅇ subscriber가 에러를 받지 않는다면 Never
+  associatedtype Failure: Error
+
+  // 3. publisher는 subscription을 주기위해서 subscriber에 receive(subscription:)를 부른다. 
+  func receive(subscription: Subscription)
+
+  // 4. publisher는 방출된 새 value를 보내기 위해 subscriber에 receive(_:)을 부른다. 
+  func receive(_ input: Self.Input) -> Subscribers.Demand
+
+  // 5. publisher는 value의 방출이 끝났다는 것을 알리기 위해, 혹은 에러때문에 끝났다는 것을 알리기위해 subscriber에 receive(completion:)를 부른다.
+  func receive(completion: Subscribers.Completion<Self.Failure>)
+}
+~~~
+
+~~~
+public protocol Subscription: Cancellable, CustomCombineIdentifierConvertible {
+  // 한 개, 혹은 더 많은 value를 받기 위해서 subscriber가 부른다.
+  func request(_ demand: Subscribers.Demand)
+}
+~~~
+
+## Creating a custom subsciber
+
+##
