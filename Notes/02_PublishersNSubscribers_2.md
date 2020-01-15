@@ -13,7 +13,7 @@
 * **CurrentValueSubject** imperative 코드에서 publisher의 현재 값을 알고싶을 때 사용.
 * subscription 이 값으로서 저장하는 대신 여러 개의 AnyCancellable의 컬렉션 안에 subscription으로 저장할 수 있다. 
 * 새로운 값을 셋팅할 때, send() / 새 값을 할당하려고 할 때, value 프러퍼티
-* `print()` 오퍼레이터를 사용해서 모든 publishing event 로그르 콘솔에서 볼 수 있음
+* `print()` 오퍼레이터를 사용해서 모든 publishing event 로그를 콘솔에서 볼 수 있음
 
 ## Dynamically adjusting demand
 * `max([num])` subsciber 의 수요를 조절할 수 있다.
