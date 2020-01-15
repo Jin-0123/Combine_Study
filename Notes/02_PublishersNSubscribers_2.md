@@ -3,7 +3,6 @@
 * subscriptions을 저장하지 않으면, 현재 코드 스코프가 끝나면 취소된다. 
 * 하나의 값을 방출하고 끝내거나 실패하거나.
 * **Promise**는 Result<Output, Failure>를 파라미터로 가지 클로저를 뜻하는 alias
-
 * 두번째 subscription을 수행하면, future는 다시 promiss를 수행하는 것이 아니라 결과를 공유하여 같은 값을 받게된다.
 * Future는 만들자마자 실행되기 때문에 일반 publisher처럼 subsciber가 필요하진 않는다.
 
