@@ -62,3 +62,28 @@ tryMap(_:)
 ~~~
 flatMap(maxPublishers:_:)
 ~~~
+> maxPublishers 최대 업스트림 퍼블리셔 개수, 디폴트는 .unlimited
+
+## Replacing upstream output
+~~~
+replaceNil(with:)
+~~~
+> nil 값이 들어온 경우 nil이 아닌 값으로 새로운 값으로 방출
+> 옵셔널 해제가 필요
+
+~~~
+replaceEmpty(with:)
+~~~
+> Empty 퍼블리셔로 완료되기 전 값을 방출하고 종료하고 싶을 때
+
+## Incrementally transforming output
+~~~
+scan(_:_:)
+
+let pub = (0...5)
+    .publisher()
+    .scan(0, { return $0 + $1 })
+    .sink(receiveValue: { print ("\($0)", terminator: " ") })
+ // Prints "0 1 3 6 10 15 ".
+~~~
+> 초기값을 가지고 이전 리턴 값을 아규먼트로 업스트림 퍼블리셔로부터 다음 값이 방출된다.
