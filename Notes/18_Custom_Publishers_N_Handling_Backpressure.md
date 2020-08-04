@@ -222,15 +222,10 @@ DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
 
 ~~~
 fileprivate final class ShareReplaySubscription<Output, Failure: Error>: Subscription {
-	// 2
 	let capacity: Int
-	// 3
 	var subscriber: AnySubscriber<Output,Failure>? = nil 
-	// 4
 	var demand: Subscribers.Demand = .none
-	// 5
 	var buffer: [Output]
-	// 6
 	var completion: Subscribers.Completion<Failure>? = nil
 	
 	init<S>(subscriber: S, replay: [Output], capacity: Int, completion: Subscribers.Completion<Failure>?) where S: Subscriber, Failure == S.Failure, Output == S.Input {
@@ -241,29 +236,22 @@ fileprivate final class ShareReplaySubscription<Output, Failure: Error>: Subscri
 	}
 	
 	private func complete(with completion: Subscribers.Completion<Failure>) {
-		// 9
 		guard let subscriber = subscriber else { return } 
 		self.subscriber = nil
-		// 10
 		self.completion = nil
 		self.buffer.removeAll()
-		// 11
 		subscriber.receive(completion: completion)
 	}
 	
 	 private func emitAsNeeded() {
 		guard let subscriber = subscriber else { return }
-		// 12
 		while self.demand > .none && !buffer.isEmpty { 
-			// 13
 			self.demand -= .max(1)
-			// 14
-			let nextDemand = subscriber.receive(buffer.removeFirst()) // 15
+			let nextDemand = subscriber.receive(buffer.removeFirst())
 			if nextDemand != .none {
 				self.demand += nextDemand 
 			}
 		}
-		// 16
 		if let completion = completion {
 			complete(with: completion)
 		}
@@ -284,10 +272,8 @@ fileprivate final class ShareReplaySubscription<Output, Failure: Error>: Subscri
 		guard subscriber != nil else { return } // 17
 		buffer.append(input)
 		if buffer.count > capacity {
-			// 18
 			buffer.removeFirst() 
 		}
-		// 19
 		emitAsNeeded()
 	}
 	
