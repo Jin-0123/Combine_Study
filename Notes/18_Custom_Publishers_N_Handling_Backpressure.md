@@ -245,13 +245,17 @@ fileprivate final class ShareReplaySubscription<Output, Failure: Error>: Subscri
 	
 	 private func emitAsNeeded() {
 		guard let subscriber = subscriber else { return }
+		// 버퍼가 있고, 처리되지 않은 수요가 있을 때 방출.
 		while self.demand > .none && !buffer.isEmpty { 
 			self.demand -= .max(1)
+			// 구독자에게 처리되지 않은 버퍼 보내고, 다음 수요 받음.
 			let nextDemand = subscriber.receive(buffer.removeFirst())
 			if nextDemand != .none {
+				// 새로운 수요 있으면 총 수요에 포함.
 				self.demand += nextDemand 
 			}
 		}
+		// 완료이벤트 있으면 보내기.
 		if let completion = completion {
 			complete(with: completion)
 		}
@@ -269,14 +273,18 @@ fileprivate final class ShareReplaySubscription<Output, Failure: Error>: Subscri
 	}
 	
 	func receive(_ input: Output) {
-		guard subscriber != nil else { return } // 17
+		guard subscriber != nil else { return }
+		// 처리되지 않은 버퍼 추가. 무한 수요같은 경우에 대한 처리가 필요하지만 현재는 괜춘.
 		buffer.append(input)
+		// 요청된 것보다 많은 값을 허용하지 말 것. 선입선출.
 		if buffer.count > capacity {
 			buffer.removeFirst() 
 		}
+		// 결과 구독자에게 전달.
 		emitAsNeeded()
 	}
 	
+	// 구독자 제거, 버퍼 비우기. 메모리 관리로 굿.
 	func receive(completion: Subscribers.Completion<Failure>) { 
 		guard let subscriber = subscriber else { return } 
 		self.subscriber = nil
