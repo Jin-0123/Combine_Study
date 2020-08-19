@@ -52,7 +52,6 @@ func test_flatMapWithMax2Publishers() {
 		.store(in: &subscriptions)
 
 	// When
-
 	intSubject1.send(1)
 
 	publisher.send(intSubject2)
@@ -118,7 +117,6 @@ func test_timerPublish() {
 ~~~
 func test_shareReplay() {
 	// Given
-
 	let subject = PassthroughSubject<Int, Never>() 
 	let publisher = subject.shareReplay(capacity: 2) 
 
