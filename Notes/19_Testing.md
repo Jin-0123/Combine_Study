@@ -72,7 +72,7 @@ func test_flatMapWithMax2Publishers() {
 }
 ~~~
 
-## Testing publish(every:on:in:)
+## Testing publish(every: on: in:)
   
 ~~~
 func test_timerPublish() {
