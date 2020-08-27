@@ -302,7 +302,7 @@ HUDView(imageType: .rofl)
 ~~~
 private func updateDecisionStateForChange(_ change: DragGesture.Value) {
 	viewModel.updateDecisionStateForTranslation(translation, andPredictedEndLocationX: change.predictedEndLocation.x, inBounds: bounds) 
-	}
+}
 ~~~
 
 ~~~
